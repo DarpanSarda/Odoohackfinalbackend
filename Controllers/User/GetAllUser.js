@@ -2,7 +2,7 @@ const UserModel = require("../../Models/UserModel/UserModel")
 
 const GetAllUser = async(req,res)=>{
     try {
-        const users = UserModel.find();
+        const users = await UserModel.find();
         return res.status(200).send({
             users
         })
