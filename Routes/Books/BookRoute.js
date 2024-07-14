@@ -12,5 +12,5 @@ router.post("/add",authenticate,AddBook);
 router.get("/",authenticate,GetAllBooks);
 router.get("/search",authenticate,GetBooksSearch);
 router.get("/search/isbn",authenticate,GetBookByISBN);
-router.put("/id",authenticate,UpdateBook);
+router.put("/:id",authenticate,UpdateBook);
 module.exports = router;

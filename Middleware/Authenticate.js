@@ -12,10 +12,12 @@ const authenticate = async(req,res,next)=>{
         }
         const userId = await jwtProvider.getUserIdfromtoken(token);
         const user = await UserModel.findById(userId);
-        if(user.role === 'librarian' || 'admin')
+        console.log(user)
+        if(user.role === 'Librarian' || 'admin')
         {
             req.librarian = user;
-            console.log("librarian")
+            console.log(req.librarian)
+            // console.log("librarian")
         }
         if(user.role === 'admin')
         {
@@ -25,6 +27,7 @@ const authenticate = async(req,res,next)=>{
         {
             req.user = user;
         }
+        console.log(req.librarian)
         // console.log(req)
     } catch (error) {
         return res.status(500).send({
