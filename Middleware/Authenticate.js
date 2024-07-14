@@ -12,7 +12,18 @@ const authenticate = async(req,res,next)=>{
         }
         const userId = jwtProvider.getUserIdfromtoken(token);
         const user = await UserModel.findById(userId);
-        req.user = user;
+        if(user.role = 'librarian' || 'admin')
+        {
+            req.librarian = user;
+        }
+        if(user.role = 'admin')
+        {
+            req.admin = user;
+        }
+        else
+        {
+            req.user = user;
+        }
     } catch (error) {
         return res.status(500).send({
             success:false,
