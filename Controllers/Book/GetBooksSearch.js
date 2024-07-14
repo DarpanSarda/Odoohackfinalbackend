@@ -5,10 +5,10 @@ const CategoryModel = require("../../Models/CategoryModel/CategoryModel");
 const GetBooksSearch = async(req,res)=>{
     const {search} = req.query
     try {
-        let books={};
-        let authorbooks={};
-        let titlebooks={};
-        let categorybooks = {};
+        let books=[];
+        let authorbooks=[];
+        let titlebooks=[];
+        let categorybooks = [];
 
         let author = await AuthorModel.findOne({Name:search});
         console.log(author)
@@ -24,17 +24,17 @@ const GetBooksSearch = async(req,res)=>{
             console.log("categoryy",cate)
             categorybooks = await BookModel.find({Category:cate}).populate("ParentCategory").populate("Category").populate("volumes").populate("Author");
         }
-        if(authorbooks)
+        if(authorbooks.length>0)
         {
-            books["author"] = authorbooks;
+            books.push(authorbooks);
         }
-        if(titlebooks)
+        if(titlebooks.length>0)
         {
-            books["title"] =titlebooks;
+            books.push(titlebooks);
         }
-        if(categorybooks)
+        if(categorybooks.length>0)
         {
-            books["category"] =titlebooks;
+            books.push(titlebooks);
         }
         return res.status(200).send({
             books
