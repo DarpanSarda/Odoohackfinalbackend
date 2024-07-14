@@ -11,8 +11,8 @@ const Addtrending = async(req,res)=>{
                 message:"Product already there"
             })
         }
-        let trendbook = new TrendingModel({book});
-        await trendbook;
+        let trendbook = new TrendingModel({books:book});
+        await trendbook.save();
         return res.status(200).send({
             trendbook
         })

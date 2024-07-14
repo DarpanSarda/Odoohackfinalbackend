@@ -10,13 +10,14 @@ const authenticate = async(req,res,next)=>{
                 error:"Token Not Found...."
             })
         }
-        const userId = jwtProvider.getUserIdfromtoken(token);
+        const userId = await jwtProvider.getUserIdfromtoken(token);
         const user = await UserModel.findById(userId);
-        if(user.role = 'librarian' || 'admin')
+        if(user.role === 'librarian' || 'admin')
         {
             req.librarian = user;
+            console.log("librarian")
         }
-        if(user.role = 'admin')
+        if(user.role === 'admin')
         {
             req.admin = user;
         }
@@ -24,6 +25,7 @@ const authenticate = async(req,res,next)=>{
         {
             req.user = user;
         }
+        // console.log(req)
     } catch (error) {
         return res.status(500).send({
             success:false,

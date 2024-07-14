@@ -1,11 +1,12 @@
 const IssueModel = require("../../Models/Issue/IssueModel");
 
 const CreateIssue = async(req,res)=>{
-    let user = req.user;
+    let user = await req.user;
+    console.log(user)
     let {book,volume,duration} = req.body;
     try {
         let alreadyexist = await IssueModel.findOne({user:user._id , book:book , volume:volume, status: "ISSUED" || "REQUESTED"});
-        console.log(alreadyexist)
+        console.log("hellooo",alreadyexist)
         if(alreadyexist)
         {
             return res.status(300).send({
@@ -15,6 +16,7 @@ const CreateIssue = async(req,res)=>{
         }
         const futureDate = new Date(Date.now());
         futureDate.setDate(futureDate.getDate() + duration);
+        console.log(futureDate)
         let Issue = new IssueModel({
             user:user._id,
             book:book,

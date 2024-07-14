@@ -4,6 +4,7 @@ const {DbConnect} = require('./Config/Dbconnect');
 const UserRoute = require("./Routes/User/UserRoute");
 const BookRoute = require("./Routes/Books/BookRoute");
 const IssueRoute = require("./Routes/Issue/IssueRoute");
+const TrendRoute = require("./Routes/Trending/TrendingRoute")
 const app = express();
 
 const PORT = 3001;
@@ -17,6 +18,7 @@ app.get("/",(req,res)=>{res.send("hello")})
 app.use("/api/v1/auth",UserRoute);
 app.use("/api/v1/books",BookRoute);
 app.use("/api/v1/issue",IssueRoute);
+app.use("/api/v1/trend",TrendRoute);
 app.listen(PORT,async()=>{
     await DbConnect();
     console.log("server started")
