@@ -17,7 +17,7 @@ const GetBooksSearch = async(req,res)=>{
             console.log(author._id)
             authorbooks = await BookModel.find({Author:author._id}).populate("ParentCategory").populate("Category").populate("volumes").populate("Author");
         }
-        titlebooks = await BookModel.find({Title:{$regex: ".*"+search+".*",$options:'i'}});
+        titlebooks = await BookModel.find({Title:{$regex: ".*"+search+".*",$options:'i'}}).populate("ParentCategory").populate("Category").populate("volumes").populate("Author");
         let cate = await CategoryModel.findOne({name: {$regex: ".*"+search+".*",$options:'i'}});
         if(cate)
         {
