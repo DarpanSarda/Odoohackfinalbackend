@@ -1,3 +1,4 @@
+const BookModel = require("../../Models/BooksModel/BooksModel");
 
 const UpdateBook = async(req,res)=>{
     const {librarian} = req.librarian;
@@ -5,7 +6,7 @@ const UpdateBook = async(req,res)=>{
     {
         let {bookid} = req.params.id;
         try {
-            const book = await 
+            const book = await BookModel.findById()
             
         } catch (error) {
             return res.status(500).send({
