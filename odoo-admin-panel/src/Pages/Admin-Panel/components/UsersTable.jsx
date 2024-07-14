@@ -86,13 +86,6 @@ const TABLE_ROWS = [
 
 const functionMembersTable = () => {
 
-    const [enableEditFormValue, setenableEditForm] = useState(false)
-
-    useEffect(() => {
-        setenableEditForm(true)
-
-
-    }, [enableEditFormValue])
 
     const [deleteUser, setDeleteUser] = useState(false)
     const RealdeleteUser = () => {
@@ -107,14 +100,63 @@ const functionMembersTable = () => {
 
     const [addMember, setAddMember] = useState(false)
     const RealaddMember = () => {
-        if(addMember == false){
+        if (addMember == false) {
             setAddMember(true)
-        } 
+        }
         else {
             setAddMember(false)
         }
     }
 
+    const [enableEditFormValue, setenableEditForm] = useState(false)
+    const RealEditForm = () => {
+        if (enableEditFormValue == false) {
+            setenableEditForm(true)
+        }
+        else {
+            setenableEditForm(false)
+        }
+    }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+  
+    const SaveTheData = async (e) => {
+        e.preventDefault();
+        const data = {
+            email: email,
+            password: password,
+            Name: name  
+          };
+      
+      
+        try {
+            const response = await fetch("http://localhost:3001/api/v1/auth/signup", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Optionally, handle success response
+            const jsonResponse = await response.json();
+            console.log('Signup successful:', jsonResponse);
+
+            // Clear form fields after successful signup
+            setEmail('');
+            setPassword('');
+            setName('');
+
+        } catch (error) {
+            console.error('Error signing up:', error);
+            // Handle error (e.g., show error message to user)
+        }
+    }
 
     return (
         <Card className="h-full w-full">
@@ -122,7 +164,7 @@ const functionMembersTable = () => {
                 enableEditFormValue ? <ModelForm /> : null
             }
             {
-                deleteUser == true ? 
+                deleteUser == true ?
                     <div>
                         <div id="popup-modal" tabindex="-1" class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                             <div class="relative p-4 w-full max-w-md max-h-full">
@@ -131,7 +173,7 @@ const functionMembersTable = () => {
                                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                         </svg>
-                                        <span  onClick={RealdeleteUser}  class="sr-only">Close modal</span>
+                                        <span onClick={RealdeleteUser} class="sr-only">Close modal</span>
                                     </button>
                                     <div class="p-4 md:p-5 text-center">
                                         <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -141,52 +183,93 @@ const functionMembersTable = () => {
                                         <button data-modal-hide="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                                             Yes, I'm sure
                                         </button>
-                                        <button  onClick={RealdeleteUser}  data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+                                        <button onClick={RealdeleteUser} data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div> : null
-        }
-        {
-            addMember ?   
-            <div id="crud-modal" tabindex="-1" aria-hidden="true" class={`backdrop-blur-sm visible flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}>
-                <div class="relative p-4 w-full max-w-md max-h-full">
-                
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            }
+            {
+                addMember ?
+                    <div id="crud-modal" tabindex="-1" aria-hidden="true" class={`backdrop-blur-sm visible flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}>
+                        <div class="relative p-4 w-full max-w-md max-h-full">
 
-                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                Create New User
-                            </h3>
-                            <button onClick={RealaddMember} type="button" class="text-gray-400  bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
-                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                    <path  stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                </svg>
-                                <span class="sr-only">Close modal</span>
-                            </button>
-                        </div>
-                        <form class="p-4 md:p-5">
-                            <div class="grid gap-4 mb-4 grid-cols-2">
-                                <div class="col-span-2">
-                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                                    <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type your name" required=""/>
+                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+
+                                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        Create New User
+                                    </h3>
+                                    <button onClick={RealaddMember} type="button" class="text-gray-400  bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
                                 </div>
-                                <div class="col-span-2 sm:col-span-1">
-                                    <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                    <input type="number" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="abc@gmail.com " required=""/>
-                                </div>
-                                
+                                <form class="p-4 md:p-5">
+                                    <div class="grid gap-4 mb-4 grid-cols-2">
+                                        <div class="col-span-2">
+                                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                                            <input onChange={(e) => setName(e.target.value)} type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type your name" required="" />
+                                        </div>
+                                        <div class="col-span-2">
+                                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                            <input onChange={(e) => setEmail(e.target.value)} type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type your name" required="" />
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                            <input onChange={(e) => setPassword(e.target.value)} type="password" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="abc@gmail.com " required="" />
+                                        </div>
+                                    </div>
+                                    <button onClick={SaveTheData} type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                                        Add new data
+                                    </button>
+                                </form>
                             </div>
-                            <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                Add new data
-                            </button>
-                        </form>
+                        </div>
+                    </div> : null
+            }
+            {
+                enableEditFormValue ? <div id="crud-modal" tabindex="-1" aria-hidden="true" class={`backdrop-blur-sm visible flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}>
+                    <div class="relative p-4 w-full max-w-md max-h-full">
+
+                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+
+                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                    Edit User Details
+                                </h3>
+                                <button onClick={RealEditForm} type="button" class="text-gray-400  bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <form class="p-4 md:p-5">
+                                <div class="grid gap-4 mb-4 grid-cols-2">
+                                    <div class="col-span-2">
+                                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                                        <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type your name" required="" />
+                                    </div>
+                                    <div class="col-span-2 sm:col-span-1">
+                                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                        <input type="number" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="abc@gmail.com " required="" />
+                                    </div>
+
+                                </div>
+                                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                                    Modify data
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            </div>: null
-        }
+                </div> : null
+            }
             <CardHeader floated={false} shadow={false} className="rounded-none">
                 <div className="mb-8 flex items-center justify-between gap-8">
                     <div>
@@ -288,7 +371,7 @@ const functionMembersTable = () => {
                                                 {date}
                                             </Typography>
                                         </td>
-                                        <td className={classes} onClick={() => enableEditFormValue ? setenableEditForm(false) : setenableEditForm(true)}>
+                                        <td className={classes} onClick={RealEditForm}>
                                             <Tooltip content="Edit User">
                                                 <IconButton variant="text">
                                                     <PencilIcon className="h-4 w-4" />
