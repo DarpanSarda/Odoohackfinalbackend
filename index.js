@@ -3,6 +3,7 @@ const cors = require('cors');
 const {DbConnect} = require('./Config/Dbconnect');
 const UserRoute = require("./Routes/User/UserRoute");
 const BookRoute = require("./Routes/Books/BookRoute");
+const IssueRoute = require("./Routes/Issue/IssueRoute");
 const app = express();
 
 const PORT = 3001;
@@ -15,6 +16,7 @@ app.get("/",(req,res)=>{res.send("hello")})
 
 app.use("/api/v1/auth",UserRoute);
 app.use("/api/v1/books",BookRoute);
+app.use("/api/v1/issue",IssueRoute);
 app.listen(PORT,async()=>{
     await DbConnect();
     console.log("server started")
