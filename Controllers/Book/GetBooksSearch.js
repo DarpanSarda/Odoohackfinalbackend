@@ -5,20 +5,20 @@ const CategoryModel = require("../../Models/CategoryModel/CategoryModel");
 const GetBooksSearch = async(req,res)=>{
     const {search} = req.query
     try {
-        let books=[];
-        let authorbooks=[];
-        let titlebooks=[];
-        let categorybooks = [];
+        let books={};
+        let authorbooks={};
+        let titlebooks={};
+        let categorybooks = {};
 
-        let author = await AuthorModel.findOne({Name:search});
+        let author = await AuthorModel.findOne({Name: {$regex: ".*"+search+".*",$options:'i'}});
         console.log(author)
         if(author)
         {
             console.log(author._id)
             authorbooks = await BookModel.find({Author:author._id}).populate("ParentCategory").populate("Category").populate("volumes").populate("Author");
         }
-        titlebooks = await BookModel.find({Title:search});
-        let cate = await CategoryModel.findOne({name:search});
+        titlebooks = await BookModel.find({Title:{$regex: ".*"+search+".*",$options:'i'}});
+        let cate = await CategoryModel.findOne({name: {$regex: ".*"+search+".*",$options:'i'}});
         if(cate)
         {
             console.log("categoryy",cate)
@@ -26,15 +26,15 @@ const GetBooksSearch = async(req,res)=>{
         }
         if(authorbooks.length>0)
         {
-            books.push(authorbooks);
+            books['author'] = authorbooks;
         }
         if(titlebooks.length>0)
         {
-            books.push(titlebooks);
+            books['title'] = titlebooks;
         }
         if(categorybooks.length>0)
         {
-            books.push(titlebooks);
+            books['cate'] = categorybooks;
         }
         return res.status(200).send({
             books
